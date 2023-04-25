@@ -2,12 +2,12 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>User</title>
+    <title>User list</title>
     <link rel="stylesheet" type="text/css"
           th:href="@{/css/style.css}"/>
 </head>
 <body>
-<h1>User</h1>
+<h1>Users list</h1>
 <div>
     <table>
         <tr>
@@ -15,11 +15,14 @@
             <th>lastName</th>
             <th></th>
         </tr>
-        <tr th:each="user : ${user}">
+        <tr th:each="user : ${listUsers}">
             <td th:utext="${user.name}">...</td>
             <td th:utext="${user.lastName}">...</td>
+            <td><a th:href="@{/update/{id}(id=${user.getId()})}">update</a></td>
+            <td><a th:href="@{/delete/{id}(id=${user.getId()})}">delete</a></td>
         </tr>
     </table>
+    <a th:href="newUser">Add</a>
 </div>
 </body>
 </html>
