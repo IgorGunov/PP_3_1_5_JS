@@ -1,16 +1,23 @@
 package ru.kata.spring.boot_security.demo.service;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kata.spring.boot_security.demo.dao.UserDao;
+import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
-public class UserServiceImp implements UserService {
+public class UserServiceImp implements UserService{
 
     private UserDao dao;
 
@@ -31,7 +38,6 @@ public class UserServiceImp implements UserService {
         return dao.get(id);
     }
 
-    @Transactional
     @Override
     public User getUserOnName(String name) {
         return dao.getUserOnName(name);
@@ -39,8 +45,8 @@ public class UserServiceImp implements UserService {
 
     @Transactional
     @Override
-    public void create(User user) {
-        dao.create(user);
+    public User create(User user) {
+        return dao.create(user);
     }
 
     @Transactional
@@ -54,4 +60,27 @@ public class UserServiceImp implements UserService {
     public void delete(int id) {
         dao.delete(id);
     }
+
+    @Transactional
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = dao.getUserOnName(username);
+        if (user == null) {
+            throw new UsernameNotFoundException("User with username: " + username + " not found");
+        }
+        return new org.springframework.security.core.userdetails.User(
+                user.getUsername(),
+                user.getPassword(),
+                getAuthorities(user.getRoles())
+        );
+    }
+
+    private Set<GrantedAuthority> getAuthorities(Set<Role> roles) {
+        Set<GrantedAuthority> authorities = new HashSet<>();
+        for (Role role : roles) {
+            authorities.add(new SimpleGrantedAuthority(role.getName()));
+        }
+        return authorities;
+    }
+
 }
