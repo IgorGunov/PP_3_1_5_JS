@@ -18,9 +18,8 @@ public class UserController {
         this.service = service;
     }
 
-    @GetMapping(value = "user")
+    @GetMapping(value = "/user")
     public String getUser(ModelMap model, Authentication authentication) {
-        System.out.println("--------------------------------------------");
         User user = service.getUserOnName(authentication.getName());
         model.addAttribute("user", user);
         return "index";

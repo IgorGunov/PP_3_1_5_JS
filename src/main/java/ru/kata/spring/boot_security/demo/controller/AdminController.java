@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import ru.kata.spring.boot_security.demo.dao.RoleDaoImp;
 import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.service.UserService;
@@ -17,6 +18,13 @@ import java.util.Set;
 @Controller
 public class AdminController {
     private UserService service;
+
+    private RoleDaoImp roleServiceImp;
+
+    @Autowired
+    public void setRoleServiceImp(RoleDaoImp roleServiceImp) {
+        this.roleServiceImp = roleServiceImp;
+    }
 
     @Autowired
     public void setUserService(UserService service) {
@@ -43,7 +51,8 @@ public class AdminController {
     @PostMapping(value = "new")
     public String saveUser(@ModelAttribute("user") User user) {
         Set<Role> roles = new HashSet<>();
-        roles.add(new Role("ROLE_USER"));
+        roles.add(roleServiceImp.getRoleOnName("ROLE_USER"));
+        user.setRoles(roles);
         service.create(user);
         return "redirect:/admin";
     }

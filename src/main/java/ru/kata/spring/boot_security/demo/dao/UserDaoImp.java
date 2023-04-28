@@ -1,14 +1,11 @@
 package ru.kata.spring.boot_security.demo.dao;
 
 import org.springframework.stereotype.Repository;
-import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 @Repository
 public class UserDaoImp implements UserDao {
@@ -42,11 +39,9 @@ public class UserDaoImp implements UserDao {
         return user;
     }
 
-
     @Override
     public void update(User user) {
         entityManager.merge(user);
-
     }
 
     @Override
