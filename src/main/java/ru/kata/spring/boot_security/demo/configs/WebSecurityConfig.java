@@ -14,8 +14,13 @@ import ru.kata.spring.boot_security.demo.service.UserService;
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-    @Autowired
+
     private UserService userDetailsService;
+
+    @Autowired
+    public void setUserDetailsService(UserService userDetailsService) {
+        this.userDetailsService = userDetailsService;
+    }
 
     @Bean
     public DaoAuthenticationProvider daoAuthenticationProvider() {

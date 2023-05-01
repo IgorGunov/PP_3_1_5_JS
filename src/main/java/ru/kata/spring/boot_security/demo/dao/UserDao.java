@@ -10,7 +10,7 @@ public interface UserDao {
 
     public User get(int id);
 
-    public User getUserOnName(String name);
+    public User getUserOnName(String name) throws Exception;
 
     public User create(User user);
 

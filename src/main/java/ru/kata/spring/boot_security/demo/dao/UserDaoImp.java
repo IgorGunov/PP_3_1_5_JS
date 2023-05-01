@@ -24,18 +24,18 @@ public class UserDaoImp implements UserDao {
     }
 
     @Override
-    public User getUserOnName(String name) {
+    public User getUserOnName(String name) throws Exception {
         for (User user : getAll()) {
             if (user.getName().equals(name)) {
                 return user;
             }
         }
-        return null;
+        throw new Exception("такого пользователя нет");
     }
 
     @Override
     public User create(User user) {
-        entityManager.persist(user);
+        entityManager.merge(user);
         return user;
     }
 

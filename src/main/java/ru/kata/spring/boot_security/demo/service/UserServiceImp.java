@@ -20,6 +20,13 @@ public class UserServiceImp implements UserService {
 
     private UserDao dao;
 
+    private RoleService roleService;
+
+    @Autowired
+    public void setRoleService(RoleService roleService) {
+        this.roleService = roleService;
+    }
+
     @Autowired
     public void setDao(UserDao dao) {
         this.dao = dao;
@@ -38,7 +45,7 @@ public class UserServiceImp implements UserService {
     }
 
     @Override
-    public User getUserOnName(String name) {
+    public User getUserOnName(String name) throws Exception {
         return dao.getUserOnName(name);
     }
 
@@ -60,25 +67,22 @@ public class UserServiceImp implements UserService {
         dao.delete(id);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = dao.getUserOnName(username);
+        User user = null;
+        try {
+            user = dao.getUserOnName(username);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         if (user == null) {
             throw new UsernameNotFoundException("User with username: " + username + " not found");
         }
         return new org.springframework.security.core.userdetails.User(
                 user.getUsername(),
                 user.getPassword(),
-                getAuthorities(user.getRoles())
+                roleService.getAuthorities(user.getRoles())
         );
-    }
-
-    private Set<GrantedAuthority> getAuthorities(Set<Role> roles) {
-        Set<GrantedAuthority> authorities = new HashSet<>();
-        for (Role role : roles) {
-            authorities.add(new SimpleGrantedAuthority(role.getName()));
-        }
-        return authorities;
     }
 }

@@ -8,7 +8,7 @@ public interface RoleDao {
 
     public List<Role> getAll();
 
-    public Role getRoleOnName(String name);
+    public Role getRoleOnName(String name) throws Exception;
 
     public void create(Role role);
 }

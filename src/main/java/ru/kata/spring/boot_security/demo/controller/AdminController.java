@@ -3,17 +3,13 @@ package ru.kata.spring.boot_security.demo.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import ru.kata.spring.boot_security.demo.dao.RoleDaoImp;
 import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 @Controller
 public class AdminController {
@@ -37,22 +33,23 @@ public class AdminController {
         return "users";
     }
 
-    @GetMapping(value = "/{id}")
+    @GetMapping(value = "/view/{id}")
     public String getUsersOnId(ModelMap model, @PathVariable("id") int id) {
-        model.addAttribute("listUsers", service.get(id));
-        return "users";
+        User user = service.get(id);
+        model.addAttribute("user", user);
+        return "index";
     }
 
     @GetMapping(value = "/newUser")
-    public String getWebpageAddUser(@ModelAttribute("user") User user) {
+    public String getWebpageAddUser(@ModelAttribute("user") User user, ModelMap model) {
+        List<Role> roles = roleServiceImp.getAll();
+        roles.stream().forEach(f -> System.out.println(f.getName()));
+        model.addAttribute("roles", roles);
         return "newUser";
     }
 
     @PostMapping(value = "new")
     public String saveUser(@ModelAttribute("user") User user) {
-        Set<Role> roles = new HashSet<>();
-        roles.add(roleServiceImp.getRoleOnName("ROLE_USER"));
-        user.setRoles(roles);
         service.create(user);
         return "redirect:/admin";
     }

@@ -19,7 +19,7 @@ public class UserController {
     }
 
     @GetMapping(value = "/user")
-    public String getUser(ModelMap model, Authentication authentication) {
+    public String getUser(ModelMap model, Authentication authentication) throws Exception {
         User user = service.getUserOnName(authentication.getName());
         model.addAttribute("user", user);
         return "index";

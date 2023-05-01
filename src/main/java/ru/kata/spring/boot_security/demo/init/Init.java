@@ -30,7 +30,7 @@ public class Init {
     }
 
     @PostConstruct
-    public void postConstruct() {
+    public void postConstruct() throws Exception {
         User user = new User("Igor", "Gunov", "123");
         user.setPassword(user.getPassword());
 
@@ -46,20 +46,22 @@ public class Init {
         roleService.create(new Role("ROLE_USER"));
         roleService.create(new Role("ROLE_ADMIN"));
 
+
         Set<Role> roles = new HashSet<>();
         roles.add(roleService.getRoleOnName("ROLE_USER"));
 
         Set<Role> roles2 = new HashSet<>();
         roles2.add(roleService.getRoleOnName("ROLE_ADMIN"));
+
         roles2.add(roleService.getRoleOnName("ROLE_USER"));
 
         user.setRoles(roles);
         user2.setRoles(roles);
         user3.setRoles(roles);
         user4.setRoles(roles2);
+
         service.create(user);
         service.create(user2);
         service.create(user4);
-
     }
 }

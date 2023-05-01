@@ -2,27 +2,36 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>User list</title>
-    <link rel="stylesheet" type="text/css"
-          th:href="@{/css/style.css}"/>
+    <title>User List</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}" />
 </head>
 <body>
-<h1>Users list</h1>
-<div>
-    <table>
+<div class="container">
+    <h1 class="header">Users List</h1>
+    <div class="actions">
+        <a class="button" th:href="@{/newUser}">Add User</a>
+        <a class="button" href="/logout">Logout</a>
+    </div>
+    <table class="table">
+        <thead>
         <tr>
-            <th>name</th>
-            <th>lastName</th>
-            <th></th>
+            <th>Name</th>
+            <th>Last Name</th>
+            <th>Actions</th>
         </tr>
+        </thead>
+        <tbody>
         <tr th:each="user : ${listUsers}">
-            <td th:utext="${user.name}">...</td>
-            <td th:utext="${user.lastName}">...</td>
-            <td><a th:href="@{/update/{id}(id=${user.getId()})}">update</a></td>
-            <td><a th:href="@{/delete/{id}(id=${user.getId()})}">delete</a></td>
+            <td th:text="${user.name}">...</td>
+            <td th:text="${user.lastName}">...</td>
+            <td>
+                <a class="button edit" th:href="@{/update/{id}(id=${user.getId()})}">Edit</a>
+                <a class="button delete" th:href="@{/delete/{id}(id=${user.getId()})}">Delete</a>
+                <a class="button view" th:href="@{/view/{id}(id=${user.getId()})}">View</a>
+            </td>
         </tr>
+        </tbody>
     </table>
-    <a th:href="newUser">Add</a>
 </div>
 </body>
 </html>

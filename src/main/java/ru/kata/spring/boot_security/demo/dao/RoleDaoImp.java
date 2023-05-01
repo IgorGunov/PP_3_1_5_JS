@@ -19,13 +19,13 @@ public class RoleDaoImp implements RoleDao {
     }
 
     @Override
-    public Role getRoleOnName(String name) {
+    public Role getRoleOnName(String name) throws Exception {
         for (Role user : getAll()) {
             if (user.getName().equals(name)) {
                 return user;
             }
         }
-        return null;
+        throw new Exception("такой роли нет");
     }
 
     @Override
