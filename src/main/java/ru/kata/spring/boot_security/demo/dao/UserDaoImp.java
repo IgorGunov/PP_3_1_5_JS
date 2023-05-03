@@ -1,5 +1,6 @@
 package ru.kata.spring.boot_security.demo.dao;
 
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Repository;
 import ru.kata.spring.boot_security.demo.model.User;
 
@@ -24,13 +25,13 @@ public class UserDaoImp implements UserDao {
     }
 
     @Override
-    public User getUserOnName(String name) throws Exception {
+    public User getUserOnName(String name) throws UsernameNotFoundException {
         for (User user : getAll()) {
             if (user.getName().equals(name)) {
                 return user;
             }
         }
-        throw new Exception("такого пользователя нет");
+        throw new UsernameNotFoundException("User with username: " + name + " not found");
     }
 
     @Override

@@ -73,10 +73,7 @@ public class UserServiceImp implements UserService {
         User user = null;
         try {
             user = dao.getUserOnName(username);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-        if (user == null) {
+        } catch (UsernameNotFoundException  e) {
             throw new UsernameNotFoundException("User with username: " + username + " not found");
         }
         return new org.springframework.security.core.userdetails.User(

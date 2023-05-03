@@ -1,11 +1,3 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-  <meta charset="UTF-8">
-  <title>User list</title>
-</head>
-<body>
-
 <form th:method="PATCH" th:action="@{/update}" th:object="${user}">
 
   <input type="hidden" th:field="*{id}"/>
@@ -19,8 +11,14 @@
   <label for="password">Enter password: </label>
   <input type="text" th:field="*{password}" id="password"/>
 
-  <br/>
+  <tr>
+    <td>Roles:</td>
+    <td>
+      <select name="selectedRoles" multiple="multiple">
+        <option th:each="role : ${roles}" th:value="${role.name}" th:text="${role.name}">Role</option>
+      </select>
+    </td>
+  </tr>
+
   <input type="submit" value="Update!"/>
 </form>
-</body>
-</html>

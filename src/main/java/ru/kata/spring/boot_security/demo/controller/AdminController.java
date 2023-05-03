@@ -9,7 +9,10 @@ import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Controller
 public class AdminController {
@@ -43,13 +46,21 @@ public class AdminController {
     @GetMapping(value = "/newUser")
     public String getWebpageAddUser(@ModelAttribute("user") User user, ModelMap model) {
         List<Role> roles = roleServiceImp.getAll();
-        roles.stream().forEach(f -> System.out.println(f.getName()));
         model.addAttribute("roles", roles);
         return "newUser";
     }
 
     @PostMapping(value = "new")
-    public String saveUser(@ModelAttribute("user") User user) {
+    public String saveUser(HttpServletRequest request, @ModelAttribute("user") User user) throws Exception {
+        String[] selectedRoles = request.getParameterValues("selectedRoles");
+        Set<Role> roles = new HashSet<>();
+        for (String roleName : selectedRoles) {
+            Role role = roleServiceImp.getRoleOnName(roleName);
+            if (role != null) {
+                roles.add(role);
+            }
+        }
+        user.setRoles(roles);
         service.create(user);
         return "redirect:/admin";
     }
@@ -57,11 +68,22 @@ public class AdminController {
     @GetMapping(value = "/update/{id}")
     public String getWebpageEditUser(ModelMap model, @PathVariable(value = "id") int id) {
         model.addAttribute("user", service.get(id));
+        List<Role> roles = roleServiceImp.getAll();
+        model.addAttribute("roles", roles);
         return "updateUser";
     }
 
     @PostMapping(value = "/update")
-    public String updateUser(ModelMap model, @ModelAttribute("user") User user) {
+    public String updateUser(ModelMap model, @ModelAttribute("user") User user, HttpServletRequest request) throws Exception {
+        String[] selectedRoles = request.getParameterValues("selectedRoles");
+        Set<Role> roles = new HashSet<>();
+        for (String roleName : selectedRoles) {
+            Role role = roleServiceImp.getRoleOnName(roleName);
+            if (role != null) {
+                roles.add(role);
+            }
+        }
+        user.setRoles(roles);
         service.update(user);
         model.addAttribute("listUsers", service.getAll());
         return "redirect:/admin";
