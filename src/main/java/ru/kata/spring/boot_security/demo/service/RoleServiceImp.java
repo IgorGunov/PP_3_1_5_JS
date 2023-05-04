@@ -49,4 +49,16 @@ public class RoleServiceImp implements RoleService {
         }
         return authorities;
     }
+    @Transactional(readOnly = true)
+    @Override
+    public Set<Role> getSetRole(String[] selectedRoles) throws Exception {
+        Set<Role> roles = new HashSet<>();
+        for (String roleName : selectedRoles) {
+            Role role = getRoleOnName(roleName);
+            if (role != null) {
+                roles.add(role);
+            }
+        }
+        return roles;
+    }
 }

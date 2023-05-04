@@ -9,7 +9,7 @@ public interface UserService extends UserDetailsService {
 
     public List<User> getAll();
 
-    public User get(int id);
+    public User get(Long id);
 
     public User getUserOnName(String name) throws Exception;
 
@@ -17,5 +17,5 @@ public interface UserService extends UserDetailsService {
 
     public void update(User user);
 
-    public void delete(int id);
+    public void delete(Long id);
 }

@@ -14,4 +14,6 @@ public interface RoleService {
     public void create(Role role);
 
     public Set<GrantedAuthority> getAuthorities(Set<Role> roles);
+
+    public Set<Role> getSetRole(String[] selectedRoles) throws Exception;
 }
