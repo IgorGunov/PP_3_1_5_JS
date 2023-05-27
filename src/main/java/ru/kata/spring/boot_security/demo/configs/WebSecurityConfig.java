@@ -16,10 +16,16 @@ import ru.kata.spring.boot_security.demo.service.UserService;
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private UserService userDetailsService;
+    private SuccessUserHandler successUserHandler;
 
     @Autowired
     public void setUserDetailsService(UserService userDetailsService) {
         this.userDetailsService = userDetailsService;
+    }
+
+    @Autowired
+    public void setSuccessUserHandler(SuccessUserHandler successUserHandler) {
+        this.successUserHandler = successUserHandler;
     }
 
     @Bean
@@ -37,7 +43,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/admin/**").hasRole("ADMIN")
                 .anyRequest().authenticated()
                 .and()
-                .formLogin().permitAll()
+                .formLogin().successHandler(successUserHandler)
                 .and()
                 .logout().permitAll();
     }

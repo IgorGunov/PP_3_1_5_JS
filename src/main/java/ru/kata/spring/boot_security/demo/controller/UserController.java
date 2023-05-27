@@ -22,6 +22,7 @@ public class UserController {
     public String getUser(ModelMap model, Authentication authentication) throws Exception {
         User user = service.getUserOnName(authentication.getName());
         model.addAttribute("user", user);
+        System.out.println(user);
         return "index";
     }
 }

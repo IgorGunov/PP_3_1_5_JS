@@ -1,6 +1,8 @@
 package ru.kata.spring.boot_security.demo.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
@@ -10,6 +12,7 @@ import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -29,9 +32,15 @@ public class AdminController {
         this.service = service;
     }
 
+
     @GetMapping(value = "admin")
-    public String getUsers(ModelMap model) {
+    public String getUsers(ModelMap model) throws Exception {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = service.getUserOnName(authentication.getName());
+        List<Role> roles = roleServiceImp.getAll();
         model.addAttribute("listUsers", service.getAll());
+        model.addAttribute("roles", roles);
+        model.addAttribute("user", user);
         return "users";
     }
 
@@ -42,28 +51,14 @@ public class AdminController {
         return "index";
     }
 
-    @GetMapping(value = "/newUser")
-    public String getWebpageAddUser(@ModelAttribute("user") User user, ModelMap model) {
-        List<Role> roles = roleServiceImp.getAll();
-        model.addAttribute("roles", roles);
-        return "newUser";
-    }
-
     @PostMapping(value = "new")
-    public String saveUser(HttpServletRequest request, @ModelAttribute("user") User user) throws Exception {
-        String[] selectedRoles = request.getParameterValues("selectedRoles");
-        Set<Role> roles = roleServiceImp.getSetRole(selectedRoles);
+    public String saveUser(@RequestParam("role") String roleName, @ModelAttribute("user") User user) throws Exception {
+        Role role = roleServiceImp.getRoleOnName(roleName);
+        Set<Role> roles = new HashSet<>();
+        roles.add(role);
         user.setRoles(roles);
         service.create(user);
         return "redirect:/admin";
-    }
-
-    @GetMapping(value = "/update/{id}")
-    public String getWebpageEditUser(ModelMap model, @PathVariable(value = "id") Long id) {
-        model.addAttribute("user", service.get(id));
-        List<Role> roles = roleServiceImp.getAll();
-        model.addAttribute("roles", roles);
-        return "updateUser";
     }
 
     @PostMapping(value = "/update")
@@ -76,7 +71,7 @@ public class AdminController {
         return "redirect:/admin";
     }
 
-    @GetMapping("/delete/{id}")
+    @PostMapping(value = "/delete/{id}")
     public String deleteUser(ModelMap model, @PathVariable("id") Long id) {
         service.delete(id);
         model.addAttribute("listUsers", service.getAll());

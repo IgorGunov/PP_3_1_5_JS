@@ -1,25 +1,62 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>User</title>
-    <link rel="stylesheet" type="text/css"
-          th:href="@{/css/style.css}"/>
+    <meta charset="utf-8">
+    <title>Главная</title>
+
+    <link rel="stylesheet" href="/myStyle.css">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
 </head>
 <body>
-<h1>User</h1>
-<div>
-    <table>
-        <tr>
-            <th>name</th>
-            <th>lastName</th>
-            <th></th>
-        </tr>
-        <tr th:each="user : ${user}">
-            <td th:utext="${user.name}">...</td>
-            <td th:utext="${user.lastName}">...</td>
-        </tr>
-    </table>
+<div class="panel panel-default">
+    <div class="panel-body white-text">
+        <b th:text="${user.name}"></b> with roles: <span th:text="${user.roles.iterator().next().name}"></span>
+    </div>
+
+    <a href="http://localhost:8080/login" class="btn btn-primary btn-panel">Logout</a>
 </div>
+
+<div class="panels-container">
+    <div class="second-panel">
+        <div class="second-panel-body">
+            <div class="btn-group-vertical" style="width: 100%;">
+                <button class="btn btn-primary btn-block" id="user-panel-button">User</button>
+            </div>
+        </div>
+    </div>
+    <div id="user-panel" class="admin-panel">
+        <div class="admin-panel-body">
+            <h1>User information-page</h1>
+            <h3 class="page-heading">About user</h3>
+            <table class="table table-bordered-noborder">
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Lastname</th>
+                    <th>Password</th>
+                    <th>Role</th>
+                </tr>
+                </thead>
+                <tbody>
+                <td th:text="${user.name}">...</td>
+                <td th:text="${user.lastName}">...</td>
+                <td th:text="${user.password}">...</td>
+                <td>
+                    <span th:each="role : ${user.roles}" th:text="${role.name}"></span>
+                </td>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>
 </body>
 </html>
