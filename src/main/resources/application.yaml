@@ -1,0 +1,33 @@
+# MySQL properties
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/user?serverTimezone=Europe/Moscow
+    username: root
+    password: Zebra_///123
+
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true
+  # Hibernate properties
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+
+# Logging properties
+logging:
+  level:
+    org.springframework: debug
+    org.hibernate: debug
+
+server:
+  port: 8080
+
+  spring:
+    resources:
+      static-locations: classpath:/static/

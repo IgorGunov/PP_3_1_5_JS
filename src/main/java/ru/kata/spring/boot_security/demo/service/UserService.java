@@ -3,19 +3,18 @@ package ru.kata.spring.boot_security.demo.service;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import ru.kata.spring.boot_security.demo.model.User;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 public interface UserService extends UserDetailsService {
+    User getUserById(long id);
 
-    public List<User> getAll();
+    List<User> getListOfUsers();
 
-    public User get(Long id);
+    @Transactional
+    void deleteUser(Long id);
 
-    public User getUserOnName(String name) throws Exception;
+    void saveUser(User user);
 
-    public User create(User user);
-
-    public void update(User user);
-
-    public void delete(Long id);
+    User findByEmail(String email);
 }
